@@ -1,15 +1,25 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"log"
+	"os"
+
+	"github.com/TAhirr01/cliflags"
+	"github.com/TAhirr01/confmaker"
+	"github.com/TAhirr01/urlshortener/internal/config"
+	"github.com/joho/godotenv"
+)
 
 func main() {
-	r := gin.Default()
+	path := cliflags.RegisterFlag("ENV")
+	cliflags.ParseFlags()
+	godotenv.Load(path.Value)
 
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "hello",
-		})
-	})
-
+	if err := confmaker.Load(os.Getenv("FILE_LOCATION"), &config.Conf); err != nil {
+		log.Fatal("File location is empty or something else", err)
+	}
+	s := new(service)
+	r := s.Start()
+	log.Println("Server running on port 8080...")
 	r.Run(":8080")
 }
