@@ -16,9 +16,10 @@ services:
     container_name: url_shortener_app
     ports:
       - "8080:8080"
-    environment:
-      - MONGO_URI=${MONGO_URI}
-      - DB_NAME=${DB_NAME}
+    env_file:
+      - .env
+    volumes:
+      - ./application.yaml:/app/config/application.yaml
     depends_on:
       - mongodb
 
