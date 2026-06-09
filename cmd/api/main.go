@@ -9,14 +9,26 @@ import (
 	"github.com/TAhirr01/urlshortener/internal/config"
 	"github.com/joho/godotenv"
 )
+const (
+	FILE_LOCATION string="FILE_LOCATION"
+	ENV string="ENV"
+)
+
 
 func main() {
-	path := cliflags.RegisterFlag("ENV")
+	path := cliflags.RegisterFlag(ENV)
 	cliflags.ParseFlags()
-	godotenv.Load(path.Value)
-
-	if err := confmaker.Load(os.Getenv("FILE_LOCATION"), &config.Conf); err != nil {
-		log.Fatal("File location is empty or something else", err)
+	if path.Value!=""{
+		if _,err:=os.Stat(path.Value);err==nil{
+			godotenv.Load(path.Value)
+		}
+	}
+	yamlPath:=os.Getenv(FILE_LOCATION)
+	if yamlPath==""{
+		log.Fatal(FILE_LOCATION,": enviroment variable is missing from system memory")
+	}
+	if err := confmaker.Load(yamlPath, &config.Conf); err != nil {
+		log.Fatal("Failed to load YAML configuration", err)
 	}
 	s := new(service)
 	r := s.Start()
