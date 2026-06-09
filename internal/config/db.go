@@ -10,6 +10,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// NOTE: Bura util packagende olan Retry funcsiyasini implement elemek lazimdir.
+// Retry heleki yaxsi deyil belkede oxunaqliqi pozur lazimsiz cetinlik yaradir
 func ConnectDB(uri string) (*mongo.Client, error) {
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 	if err != nil {
