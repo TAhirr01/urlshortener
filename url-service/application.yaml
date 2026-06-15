@@ -1,0 +1,3 @@
+application:
+   mongo-db:
+     mongo-uri: ${MONGO_URI}
